@@ -49,9 +49,8 @@ class User extends Authenticatable
     // Tambahkan relasi skills ini (MANY-TO-MANY)
     public function skills(): BelongsToMany
     {
-        return $this->belongsToMany(Skills::class, 'skill_student', 'student_id', 'skill_id');
+        return $this->belongsToMany(Skill::class, 'skill_student', 'student_id', 'skill_id');
     }
-
     // Helper untuk cek role
     public function isAdmin()
     {

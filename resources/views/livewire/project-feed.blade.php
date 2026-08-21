@@ -32,46 +32,54 @@
         @forelse($projects as $project)
             <div
                 class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group flex flex-col">
-                <!-- Thumbnail -->
+                <!-- Thumbnail Image -->
                 <div class="h-48 bg-gray-200 overflow-hidden relative">
-                    <img src="{{ $project->thumbnail }}" alt="{{ $project->judul }}"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    @if($project->thumbnail)
+                        @php
+                            $thumbnailPath = asset('storage/' . $project->thumbnail);
+                            // Cek apakah file ada
+                            $fileExists = file_exists(storage_path('app/public/' . $project->thumbnail));
+                        @endphp
+
+                        @if($fileExists)
+                            <img src="{{ $thumbnailPath }}" alt="{{ $project->judul }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400"
+                                style="display: none;">
+                                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                        @else
+                            <!-- Fallback jika file tidak ada -->
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                        @endif
+                    @else
+                        <!-- Jika tidak ada thumbnail di database -->
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                    @endif
+
+                    <!-- Badge Kategori -->
                     <div class="absolute top-3 left-3">
                         <span
                             class="px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-600 text-xs font-bold rounded-full shadow-sm">
                             {{ $project->category->name }}
                         </span>
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="font-bold text-gray-900 text-lg line-clamp-1 group-hover:text-blue-600 transition">
-                        {{ $project->judul }}
-                    </h3>
-                    <p class="text-gray-500 text-sm mt-2 line-clamp-2 flex-grow">
-                        {{ Str::limit($project->deskripsi, 80) }}
-                    </p>
-
-                    <!-- Author Info -->
-                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <div class="flex items-center">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($project->user->name) }}&background=random"
-                                class="w-8 h-8 rounded-full mr-2">
-                            <div>
-                                <p class="text-sm font-semibold text-gray-800 leading-tight">{{ $project->user->name }}</p>
-                                <p class="text-xs text-gray-500">{{ $project->user->profile->jurusan ?? 'Siswa' }}</p>
-                            </div>
-                        </div>
-
-                        <!-- Like Button -->
-                        <button class="text-gray-400 hover:text-red-500 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                                </path>
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>

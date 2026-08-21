@@ -20,7 +20,7 @@
 
 <body class="font-sans antialiased bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <!-- Logo -->
@@ -31,41 +31,100 @@
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
                             </path>
                         </svg>
-                        <span class="font-bold text-xl text-gray-800">SMK Talent Hub</span>
+                        <span class="text-xl font-bold text-gray-900">SMK Talent Hub</span>
                     </a>
                 </div>
 
-                <!-- Right Side -->
-                <div class="flex items-center space-x-4">
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-3">
                     @auth
-                        <a href="{{ route('dashboard') }}"
-                            class="text-gray-600 hover:text-gray-900 font-medium">Dashboard</a>
+                                    <!-- Beranda (untuk SEMUA role) -->
+                                    <a href="{{ route('home') }}"
+                                        class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                                        Beranda
+                                    </a>
 
-                        <!-- User Dropdown -->
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
-                                <img src="{{ auth()->user()->foto_profil ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
-                                    class="w-8 h-8 rounded-full">
-                                <span>{{ auth()->user()->name }}</span>
-                            </button>
+                                    <!-- Karya Siswa (untuk SEMUA role) -->
+                                    <a href="{{ route('projects.index') }}"
+                                        class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                                        Karya Siswa
+                                    </a>
 
-                            <div x-show="open" @click.away="open = false"
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
-                                style="display: none;">
-                                <a href="{{ route('profile.edit') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                                </form>
-                            </div>
-                        </div>
+                                    <!-- Admin Dashboard (HANYA admin) -->
+                                    @if(auth()->user()->role === 'admin')
+                                        <a href="{{ route('admin.dashboard') }}"
+                                            class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition shadow-sm">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                                </path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                            Admin Panel
+                                        </a>
+                                    @endif
+
+                                    <!-- Recruiter Dashboard (HANYA rekruter) -->
+                                    @if(auth()->user()->role === 'rekruter')
+                                        <a href="{{ route('recruiter.dashboard') }}"
+                                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition shadow-sm">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                            Recruiter Panel
+                                        </a>
+                                    @endif
+
+                                    <!-- Upload Proyek (HANYA siswa) -->
+                                    @if(auth()->user()->role === 'siswa')
+                                        <a href="{{ route('projects.create') }}"
+                                            class="text-blue-600 hover:text-blue-700 font-medium px-3 py-2 rounded-lg hover:bg-blue-50 transition">
+                                            + Upload
+                                        </a>
+                                    @endif
+
+                                    <!-- Profil Saya (untuk SEMUA role) -->
+                                    <a href="{{ route('profile.show', auth()->user()) }}"
+                                        class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                                        Profil Saya
+                                    </a>
+
+                                    <!-- Edit Profil (untuk SEMUA role) -->
+                                    <a href="{{ route('profile.edit.custom') }}"
+                                        class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                                        Edit Profil
+                                    </a>
+
+                                    <!-- User Info & Logout -->
+                                    <div class="flex items-center space-x-2 ml-2 pl-3 border-l border-gray-200">
+                                        <img src="{{ auth()->user()->foto_profil ? asset('storage/' . auth()->user()->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random' }}"
+                                            class="w-8 h-8 rounded-full">
+                                        <span
+                                            class="text-sm font-medium text-gray-700 hidden sm:block">{{ auth()->user()->name }}</span>
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full
+                                            {{ auth()->user()->role === 'admin' ? 'bg-purple-100 text-purple-700' :
+                        (auth()->user()->role === 'rekruter' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700') }}">
+                                            {{ ucfirst(auth()->user()->role) }}
+                                        </span>
+                                        <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                                            @csrf
+                                            <button type="submit"
+                                                class="text-sm text-red-600 hover:text-red-700 font-medium">Logout</button>
+                                        </form>
+                                    </div>
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 font-medium">Sign in</a>
+                        <a href="{{ route('home') }}"
+                            class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2">Beranda</a>
+                        <a href="{{ route('projects.index') }}"
+                            class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2">Karya Siswa</a>
+                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 font-medium px-3 py-2">Sign
+                            in</a>
                         <a href="{{ route('register') }}"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-full font-medium hover:bg-blue-700 transition">Get
+                            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">Get
                             started</a>
                     @endauth
                 </div>
